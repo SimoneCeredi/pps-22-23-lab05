@@ -66,8 +66,8 @@ enum List[A]:
 
   def generalZipRight[B](i: Int => B): List[(A, B)] = this match
     case Nil() => Nil()
-    case _ => this.foldRight((Nil(): List[(A, B)], this.length - 1))((e, tuple) => ((e, i(tuple._2)) :: tuple._1, tuple._2 - 1))._1
-  //    case _ => this.foldRight(Nil())((e, st) => (e, i(this.length - st.length - 1)) :: st)
+    // TODO: find a better way to decompose, avoid ._1, ._2
+    case _ => this.foldRight((Nil(): List[(A, B)], this.length - 1)) { case (e, (st, in)) => ((e, i(in)) :: st, in - 1) }._1
 
   def partition(pred: A => Boolean): (List[A], List[A]) = (this.filter(pred(_)), this.filter(!pred(_)))
 
