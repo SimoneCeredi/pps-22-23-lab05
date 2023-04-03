@@ -70,7 +70,10 @@ enum List[A]:
 
   def partition(pred: A => Boolean): (List[A], List[A]) = (this.filter(pred(_)), this.filter(!pred(_)))
 
-  def span(pred: A => Boolean): (List[A], List[A]) = ???
+  def span(pred: A => Boolean): (List[A], List[A]) = this match
+    case h :: t if pred(h) => t.span(pred) match
+      case (f, s) => (h :: f, s)
+    case _ => (Nil(), this)
 
   /** @throws UnsupportedOperationException if the list is empty */
   def reduce(op: (A, A) => A): A = ???
