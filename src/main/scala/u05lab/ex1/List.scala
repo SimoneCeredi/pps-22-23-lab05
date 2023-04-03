@@ -2,11 +2,14 @@ package u05lab.ex1
 
 import u05lab.ex1.List
 
+import scala.::
+
 // Ex 1. implement the missing methods both with recursion or with using fold, map, flatMap, and filters
 // List as a pure interface
 enum List[A]:
   case ::(h: A, t: List[A])
   case Nil()
+
   def ::(h: A): List[A] = List.::(h, this)
 
   def head: Option[A] = this match
@@ -59,7 +62,11 @@ enum List[A]:
   def reverse(): List[A] = foldLeft[List[A]](Nil())((l, e) => e :: l)
 
   /** EXERCISES */
-  def zipRight: List[(A, Int)] = ???
+  def zipRight: List[(A, Int)] = generalZipRight(i => i)
+
+  def generalZipRight[B](i: Int => B): List[(A, B)] = this match
+    case Nil() => Nil()
+    case _ => this.foldRight(Nil())((e, st) => (e, i(this.length - st.length - 1)) :: st)
 
   def partition(pred: A => Boolean): (List[A], List[A]) = ???
 
@@ -84,6 +91,7 @@ object List:
 @main def checkBehaviour(): Unit =
   val reference = List(1, 2, 3, 4)
   println(reference.zipRight) // List((1, 0), (2, 1), (3, 2), (4, 3))
+  println(reference.generalZipRight("a" + _)) // List((1, a0), (2, a1), (3, a2), (4, a3))
   println(reference.partition(_ % 2 == 0)) // (List(2, 4), List(1, 3))
   println(reference.span(_ % 2 != 0)) // (List(1), List(2, 3, 4))
   println(reference.span(_ < 3)) // (List(1, 2), List(3, 4))
