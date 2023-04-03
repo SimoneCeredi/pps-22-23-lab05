@@ -68,7 +68,7 @@ enum List[A]:
     case Nil() => Nil()
     case _ => this.foldRight(Nil())((e, st) => (e, i(this.length - st.length - 1)) :: st)
 
-  def partition(pred: A => Boolean): (List[A], List[A]) = ???
+  def partition(pred: A => Boolean): (List[A], List[A]) = (this.filter(pred(_)), this.filter(!pred(_)))
 
   def span(pred: A => Boolean): (List[A], List[A]) = ???
 
